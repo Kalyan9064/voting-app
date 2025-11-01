@@ -1,48 +1,32 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import Button from "../components/Button";
 
 export default function Home() {
-  const navigate = useNavigate();
-
   return (
-    <div style={{
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "2rem",
-      background: "linear-gradient(180deg,#f8fafc,#eef2ff)"
-    }}>
-      <div style={{
-        maxWidth: 900,
-        width: "100%",
-        background: "white",
-        borderRadius: 12,
-        padding: 30,
-        boxShadow: "0 8px 30px rgba(2,6,23,0.08)"
-      }}>
-        <h1 style={{ fontSize: 28, marginBottom: 8 }}>🗳️ Voting App</h1>
-        <p style={{ color: "#475569", marginBottom: 20 }}>
-          Simple and secure voting system. Create an account with Aadhar, login,
-          view candidates, cast your vote and check real-time results.
-        </p>
+    <Layout>
+      <div className="card" style={{ display: "flex", gap: 20, alignItems: "center" }}>
+        <div style={{ flex: 1 }}>
+          <h2 style={{ margin: 0 }}>Welcome to the Voting App</h2>
+          <p className="text-muted" style={{ marginTop: 8 }}>
+            A secure, simple voting system. Register with Aadhar, login and cast your vote. Live results available.
+          </p>
 
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <button
-            onClick={() => navigate("/login")}
-            style={{
-              background: "#2563eb",
-              color: "white",
-              padding: "10px 16px",
-              borderRadius: 8,
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            🚀 Get Started
-          </button>
+          <div style={{ marginTop: 16, display: "flex", gap: 12 }}>
+            <Button variant="primary" onClick={() => window.location.href = "/login"}>🚀 Get Started</Button>
+            <Button onClick={() => window.location.href = "/results"}>📊 See Results</Button>
+          </div>
+        </div>
+
+        <div style={{ width: 200 }}>
+          <div style={{
+            borderRadius: 12, padding: 18, background: "linear-gradient(180deg,#f0fff4,#e9fff1)", textAlign: "center"
+          }}>
+            <h3 style={{ margin: 0, color: "var(--accent)" }}>Vote Safely</h3>
+            <p className="muted" style={{ marginTop: 6 }}>Transparent counts · Protected accounts</p>
+          </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }

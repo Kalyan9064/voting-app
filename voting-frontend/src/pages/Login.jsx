@@ -1,71 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import Button from "../components/Button";
+import Card from "../components/Card";
 
 export default function Login() {
   const [aadharCardNumber, setAadhar] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setAadhar("");
+    setPassword("");
     setError("");
+  }, []);
 
+  const submit = async (e) => {
+    e.preventDefault();
     try {
-      const res = await API.post("/user/login", {
-        aadharCardNumber,
-        password,
-      });
+      const res = await API.post("/user/login", { aadharCardNumber, password });
 
-      // Save token and role
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.user.role);
 
-      // Redirect to appropriate dashboard
-      if (res.data.user.role === "admin") {
-        navigate("/admin-dashboard");
-      } else {
-        navigate("/voter-dashboard");
-      }
+      if (res.data.user.role === "admin") navigate("/admin-dashboard");
+      else navigate("/voter-dashboard");
     } catch (err) {
-      console.error(err);
       setError(err.response?.data?.error || "Login failed");
     }
   };
 
   return (
-    <div style={{ maxWidth: 420, margin: "auto", padding: 24 }}>
-      <h2>🔐 Login</h2>
-      <form onSubmit={handleSubmit} style={{ display: "grid", gap: 10 }}>
-        <label>Aadhar Number</label>
-        <input
-          name="aadharCardNumber"
-          value={aadharCardNumber}
-          onChange={(e) => setAadhar(e.target.value)}
-          required
-          placeholder="Enter your Aadhar number"
-        />
-        <label>Password</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          placeholder="Password"
-        />
+    <Layout>
+      <Card title="🔐 Login" subtitle="Use your Aadhar number and password">
+        <form className="form" onSubmit={submit} autoComplete="off">
 
-        <button type="submit" style={{ padding: "8px 12px" }}>
-          Login
-        </button>
+          {/* Aadhaar Input */}
+          <input
+            className="input"
+            placeholder="Aadhar number"
+            value={aadharCardNumber}
+            onChange={(e) => setAadhar(e.target.value)}
+            autoComplete="off"
+            required
+          />
 
-        {error && <div style={{ color: "red" }}>{error}</div>}
+          {/* Password Input with Eye Icon */}
+          <div style={{ position: "relative" }}>
+            <input
+              className="input"
+              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+              required
+            />
 
-        <p style={{ marginTop: 6 }}>
-          Don't have account? <a href="/signup">Signup</a>
-        </p>
-      </form>
-    </div>
+            {/* Eye Icon Toggle */}
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "12px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                fontSize: "18px",
+                userSelect: "none",
+                color: "#444",
+              }}
+            >
+              {showPassword ? "⌣" : "👁"}
+            </span>
+          </div>
+
+          <Button variant="primary" type="submit">Login</Button>
+
+          {error && (
+            <div style={{ color: "red", marginTop: "8px" }}>{error}</div>
+          )}
+
+          <div className="text-muted" style={{ marginTop: "10px" }}>
+            Don't have an account? <a href="/signup">Signup</a>
+          </div>
+
+        </form>
+      </Card>
+    </Layout>
   );
 }

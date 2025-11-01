@@ -11,6 +11,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ResultsPage from "./pages/ResultsPage";
 import Profile from "./pages/UserProfile";
 import UpdatePassword from "./pages/UpdatePassword";
+import "./styles/ui.css";
 
 import ProtectedRoute from "./ProtectedRoute";
 import "./index.css";

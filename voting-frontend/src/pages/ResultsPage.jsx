@@ -1,68 +1,29 @@
 import React, { useEffect, useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import Layout from "../components/Layout";
+import Card from "../components/Card";
 
-const ResultsPage = () => {
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // ✅ Fetch results from backend
-  useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/candidate/vote/count");
-        const data = await res.json();
-        setResults(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching results:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchResults();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen text-xl font-semibold">
-        Loading results...
-      </div>
-    );
-  }
+export default function ResultsPage(){
+  const [results,setResults] = useState([]);
+  useEffect(()=>{ fetch("http://localhost:3000/candidate/vote/count").then(r=>r.json()).then(setResults).catch(console.error); }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow-md">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          🗳️ Election Results (Chart)
-        </h1>
-
-        {results.length === 0 ? (
-          <p className="text-center text-gray-500 text-lg">No votes yet.</p>
-        ) : (
-          <div className="w-full h-96">
+    <Layout>
+      <Card title="🗳️ Election Results (Chart)">
+        {results.length === 0 ? <div className="muted">No votes yet.</div> :
+          <div style={{ width: "100%", height: 420 }}>
             <ResponsiveContainer>
-              <BarChart data={results} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+              <BarChart data={results} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis allowDecimals={false} />
                 <Tooltip />
-                <Bar dataKey="votes" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="votes" fill="var(--primary)" radius={[8,8,0,0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        )}
-      </div>
-    </div>
+        }
+      </Card>
+    </Layout>
   );
-};
-
-export default ResultsPage;
+}
