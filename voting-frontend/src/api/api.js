@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const API = axios.create({
- baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: "https://voting-app-bimw.onrender.com", // ✅ hardcoded for now
 });
 
-// Attach JWT token automatically for every request
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   if (token) {
