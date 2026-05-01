@@ -11,7 +11,7 @@ const bodyParser = require('body-parser'); // Middleware to parse JSON request b
 // ==========================
 app.use(cors({
   //origin: 'http://localhost:5173', // your React frontend
-  origin: 'https://voting-app-kalyan.vercel.app/', // ✅ your vercel URL
+  origin: 'https://voting-app-kalyan.vercel.app', // ✅ your vercel URL
   credentials: true,
 }));
 
